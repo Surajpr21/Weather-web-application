@@ -35,64 +35,64 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
     });
   
-function fetchWeatherData() {
-    const apiKey = '2a8afebb53ea174c94cd8e41e618e637';
-    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityInput}&appid=${apiKey}&units=metric`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('City not found');
-            }
-            return response.json();
-        })
-        .then(data => {
-            temp.innerHTML = `${data.main.temp.toFixed(1)}&#176;C`;
-            conditionOutput.innerHTML = data.weather[0].description;
-
-            const timestamp = data.dt * 1000;
-            const timezone = data.timezone;
-
-            // Use the Intl.DateTimeFormat with a specific time zone
-            const options = {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false,
-                timeZone: 'UTC',
-            };
-            const formatter = new Intl.DateTimeFormat('en-US', options);
-            const localDateObj = new Date(timestamp + timezone * 1000);
-            const [dateFormatted, timeFormatted] = formatter.format(localDateObj).split(', ');
-
-            dateOutput.innerHTML = dateFormatted;
-            timeOutput.innerHTML = timeFormatted;
-
-            nameOutput.innerHTML = data.name;
-
-            const iconId = data.weather[0].icon;
-            icon.src = `https://openweathermap.org/img/w/${iconId}.png`;
-
-            cloudOutput.innerHTML = `${data.clouds.all || 0}%`;
-            humidityOutput.innerHTML = `${data.main.humidity || 0}%`;
-            windOutput.innerHTML = `${data.wind.speed || 0} km/h`;
-
-            const code = data.weather[0].id;
-            const timeOfDay = localDateObj.getHours() >= 6 && localDateObj.getHours() < 18 ? "day" : "night";
-
-            setAppBackground(code, timeOfDay);
-            app.style.opacity = "1";
-        })
-        .catch(error => {
-            if (error.message === 'City not found') {
-                console.log('City not found, please enter a valid city name');
-            } else {
-                console.error('An error occurred:', error);
-            }
-            app.style.opacity = "1";
-        });
-}
-
+    function fetchWeatherData() {
+        const apiKey = '2a8afebb53ea174c94cd8e41e618e637';
+        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityInput}&appid=${apiKey}&units=metric`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('City not found');
+                }
+                return response.json();
+            })
+            .then(data => {
+                temp.innerHTML = `${data.main.temp.toFixed(1)}&#176;C`;
+                conditionOutput.innerHTML = data.weather[0].description;
+    
+                const timestamp = data.dt * 1000;
+                const timezone = data.timezone;
+    
+                // Use the Intl.DateTimeFormat with a specific time zone
+                const options = {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false,
+                    timeZone: 'UTC',
+                };
+                const formatter = new Intl.DateTimeFormat('en-US', options);
+                const localDateObj = new Date(timestamp + timezone * 1000);
+                const [dateFormatted, timeFormatted] = formatter.format(localDateObj).split(', ');
+    
+                dateOutput.innerHTML = dateFormatted;
+                timeOutput.innerHTML = timeFormatted;
+    
+                nameOutput.innerHTML = data.name;
+    
+                const iconId = data.weather[0].icon;
+                icon.src = `https://openweathermap.org/img/w/${iconId}.png`;
+    
+                cloudOutput.innerHTML = `${data.clouds.all || 0}%`;
+                humidityOutput.innerHTML = `${data.main.humidity || 0}%`;
+                windOutput.innerHTML = `${data.wind.speed || 0} km/h`;
+    
+                const code = data.weather[0].id;
+                const timeOfDay = localDateObj.getHours() >= 6 && localDateObj.getHours() < 18 ? "day" : "night";
+    
+                setAppBackground(code, timeOfDay);
+                app.style.opacity = "1";
+            })
+            .catch(error => {
+                if (error.message === 'City not found') {
+                    console.log('City not found, please enter a valid city name');
+                } else {
+                    console.error('An error occurred:', error);
+                }
+                app.style.opacity = "1";
+            });
+    }
+    
   
     function setAppBackground(code, timeOfDay) {
         const backgroundElement = document.querySelector('.weather-web'); 
